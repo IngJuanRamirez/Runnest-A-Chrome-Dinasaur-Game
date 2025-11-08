@@ -9,12 +9,17 @@
 import pygame
 
 # Libraries
-from player import Player # Player Sprite
+from player import Player # Player sprite
+from ground import Ground # Ground level
 
 class Runnest:
     def __init__(self) -> None:
-        self.width = 500
+        self.width = 800
         self.height = 500
+
+        # == Ground Constants ==
+        self.GROUND_HEIGHT = 80
+        self.GROUND_Y = self.height - self.GROUND_HEIGHT
 
         # Initialize Pygame
         pygame.init()
@@ -30,14 +35,19 @@ class Runnest:
         # Flag loop
         self.running = True
 
+        # == Crete the ground
+        self.ground = Ground(x=0, y=self.GROUND_Y, width=self.width, height=self.GROUND_HEIGHT)
+
         # == Create the player ==
-        self.player = Player(x=50, y=self.height - 60) # 'y' is the player's height
+        self.player = Player(x=50, y=0) # 'y' is temporal
+        # Use the ground to posisionate the player
+        self.player.rect.bottom = self.ground.rect.top
 
         # New group of sprites
         self.all_sprites = pygame.sprite.Group()
         # Add player sprite
         self.all_sprites.add(self.player)
-
+        self.all_sprites.add(self.ground)
 
     def _loop(self) -> None:
         """Main loop of the game"""
