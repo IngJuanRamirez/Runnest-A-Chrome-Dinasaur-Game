@@ -20,6 +20,7 @@ class Runnest:
         # == Ground Constants ==
         self.GROUND_HEIGHT = 80
         self.GROUND_Y = self.height - self.GROUND_HEIGHT
+        self.GAME_SPEED = 5
 
         # Initialize Pygame
         pygame.init()
@@ -35,19 +36,23 @@ class Runnest:
         # Flag loop
         self.running = True
 
-        # == Crete the ground
-        self.ground = Ground(x=0, y=self.GROUND_Y, width=self.width, height=self.GROUND_HEIGHT)
+        # Create the groups
+        self.ground_group = pygame.sprite.Group()
+        self.all_sprites = pygame.sprite.Group()
+
+        # == Crete the ground ==
+        # Ground 1
+        self.ground1 = Ground(0, self.GROUND_Y, self.width, self.GROUND_HEIGHT, self.GAME_SPEED, self.ground_group, self.all_sprites)
+        # Ground 2
+        self.ground2 = Ground(self.width, self.GROUND_Y, self.width, self.GROUND_HEIGHT, self.GAME_SPEED, self.ground_group, self.all_sprites)
+        # == WARNING ==
+        # I had to change the color of the socond ground to view the transition of the ground's group
+        self.ground2.image.fill((0, 0, 255))
 
         # == Create the player ==
-        self.player = Player(x=50, y=0) # 'y' is temporal
+        self.player = Player(50, 0, self.all_sprites) # 'y' is temporal
         # Use the ground to posisionate the player
-        self.player.rect.bottom = self.ground.rect.top
-
-        # New group of sprites
-        self.all_sprites = pygame.sprite.Group()
-        # Add player sprite
-        self.all_sprites.add(self.player)
-        self.all_sprites.add(self.ground)
+        self.player.rect.bottom = self.ground1.rect.top
 
     def _loop(self) -> None:
         """Main loop of the game"""
@@ -64,7 +69,7 @@ class Runnest:
                         self.player.jump()
 
             # Update all sprites
-            self.all_sprites.update(self.ground.rect)
+            self.all_sprites.update(self.ground_group)
 
             # Refresh the screen
             self.screen.fill(self.WHITE_COLOR_SCREEN)

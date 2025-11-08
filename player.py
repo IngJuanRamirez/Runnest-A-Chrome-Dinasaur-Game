@@ -10,8 +10,8 @@
 from pygame import sprite, Surface, Rect
 
 class Player(sprite.Sprite):
-    def __init__(self, x, y) -> None:
-        super().__init__()
+    def __init__(self, x, y, *groups) -> None:
+        super().__init__(*groups)
 
         # Player image
         self.image = Surface((40, 60))
@@ -34,7 +34,7 @@ class Player(sprite.Sprite):
             self.vel_y = self.jump_power
             self.is_on_ground = False
 
-    def update(self, ground_rect: Rect) -> None:
+    def update(self, ground_group: sprite.Group) -> None:
         """Update Logic"""
         
         # Apply gravity
@@ -42,10 +42,12 @@ class Player(sprite.Sprite):
         # Update pos Y
         self.rect.y += self.vel_y
 
+        hits = sprite.spritecollide(self, ground_group, False)
+
         # Check for collisions
-        if self.rect.colliderect(ground_rect):
+        if hits:
             # If collides, land"
-            self.rect.bottom = ground_rect.top
+            self.rect.bottom = hits[0].rect.top
             self.vel_y = 0
             self.is_on_ground = True
         else:

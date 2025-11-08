@@ -10,8 +10,8 @@
 from pygame import sprite, Surface
 
 class Ground(sprite.Sprite):
-    def __init__(self, x, y, width, height) -> None:
-        super().__init__()
+    def __init__(self, x, y, width, height, speed, *groups) -> None:
+        super().__init__(*groups)
 
         # Ground image
         self.image = Surface((width, height))
@@ -21,5 +21,13 @@ class Ground(sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
 
+        self.speed = speed
+        self.screen_width = width
+
     def update(self, *args) -> None:
-        pass
+        
+        # Move sprite to the left
+        self.rect.x -= self.speed
+
+        if self.rect.right <= 0:
+            self.rect.x += self.screen_width * 2
