@@ -8,6 +8,9 @@
 # main.py
 import pygame
 
+# Libraries
+from player import Player # Player Sprite
+
 class Runnest:
     def __init__(self) -> None:
         self.width = 500
@@ -27,6 +30,15 @@ class Runnest:
         # Flag loop
         self.running = True
 
+        # == Create the player ==
+        self.player = Player(x=50, y=self.height - 60) # 'y' is the player's height
+
+        # New group of sprites
+        self.all_sprites = pygame.sprite.Group()
+        # Add player sprite
+        self.all_sprites.add(self.player)
+
+
     def _loop(self) -> None:
         """Main loop of the game"""
         while(self.running):
@@ -36,8 +48,13 @@ class Runnest:
                 if event.type == pygame.QUIT:
                     self.running = False
 
+            # Update all sprites
+            self.all_sprites.update()
+
             # Refresh the screen
             self.screen.fill(self.WHITE_COLOR_SCREEN)
+            # Draw all spites
+            self.all_sprites.draw(self.screen)
             pygame.display.flip()
             self.clock.tick(60) # 60fps, for now.
 
