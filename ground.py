@@ -21,5 +21,5 @@ class Ground(sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
 
-    def update(self) -> None:
+    def update(self, *args) -> None:
         pass

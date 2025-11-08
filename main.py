@@ -58,8 +58,13 @@ class Runnest:
                 if event.type == pygame.QUIT:
                     self.running = False
 
+                # Inputs
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE: # Space Key
+                        self.player.jump()
+
             # Update all sprites
-            self.all_sprites.update()
+            self.all_sprites.update(self.ground.rect)
 
             # Refresh the screen
             self.screen.fill(self.WHITE_COLOR_SCREEN)

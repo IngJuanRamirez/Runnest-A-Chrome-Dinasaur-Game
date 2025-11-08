@@ -5,9 +5,9 @@
 # If you wan to see the code, please visit: https://github.com/IngJuanRamirez/Runnest-A-Chrome-Dinasaur-Game.git
 # ========================================================================================================================
 
-#player.py
+# player.py
 
-from pygame import sprite, Surface
+from pygame import sprite, Surface, Rect
 
 class Player(sprite.Sprite):
     def __init__(self, x, y) -> None:
@@ -21,6 +21,32 @@ class Player(sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
 
-    def update(self,) -> None:
-        """Update Logic (Soon)"""
-        pass
+        # == Character Physics ==
+        self.gravity = 1
+        self.vel_y = 0 # Vertical velocity
+        # This variable is negative because is moving up
+        self.jump_power = -20 # How high does he jump?
+        self.is_on_ground = True # Default
+
+    def jump(self) -> None:
+        """Jumps only if the player is on the ground"""
+        if self.is_on_ground:
+            self.vel_y = self.jump_power
+            self.is_on_ground = False
+
+    def update(self, ground_rect: Rect) -> None:
+        """Update Logic"""
+        
+        # Apply gravity
+        self.vel_y += self.gravity
+        # Update pos Y
+        self.rect.y += self.vel_y
+
+        # Check for collisions
+        if self.rect.colliderect(ground_rect):
+            # If collides, land"
+            self.rect.bottom = ground_rect.top
+            self.vel_y = 0
+            self.is_on_ground = True
+        else:
+            self.is_on_ground = False
