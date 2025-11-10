@@ -40,13 +40,13 @@ class Runnest:
         self.ground_group = pygame.sprite.Group()
         self.all_sprites = pygame.sprite.Group()
 
-        # == Crete the ground ==
+        # == Create the ground ==
         # Ground 1
         self.ground1 = Ground(0, self.GROUND_Y, self.width, self.GROUND_HEIGHT, self.GAME_SPEED, self.ground_group, self.all_sprites)
         # Ground 2
         self.ground2 = Ground(self.width, self.GROUND_Y, self.width, self.GROUND_HEIGHT, self.GAME_SPEED, self.ground_group, self.all_sprites)
         # == WARNING ==
-        # I had to change the color of the socond ground to view the transition of the ground's group
+        # I had to change the color of the second ground to view the transition of the ground's group
         self.ground2.image.fill((0, 0, 255))
 
         # == Create the player ==
@@ -66,7 +66,12 @@ class Runnest:
                 # Inputs
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE: # Space Key
-                        self.player.jump()
+                        self.player.jump() # Player jumping
+                    if event.key == pygame.K_s or event.key == pygame.K_DOWN:
+                        self.player.bend() # Player Crouching down
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_s or event.key == pygame.K_DOWN:
+                        self.player.stand_up()
 
             # Update all sprites
             self.all_sprites.update(self.ground_group)
