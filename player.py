@@ -10,7 +10,7 @@
 from pygame import sprite, Surface
 
 class Player(sprite.Sprite):
-    def __init__(self, x, y, *groups) -> None:
+    def __init__(self, *groups) -> None:
         super().__init__(*groups)
 
         # Player image
@@ -24,7 +24,7 @@ class Player(sprite.Sprite):
         # Normal image
         self.image = self.original_image.copy()
         self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
+        self.rect.topleft = (0, 0)
 
         # == Character Physics ==
         self.gravity = 1

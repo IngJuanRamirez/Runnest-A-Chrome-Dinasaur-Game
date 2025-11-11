@@ -11,6 +11,7 @@ import pygame
 # Libraries
 from player import Player # Player sprite
 from ground import Ground # Ground level
+from obstacle import Obstacle # Obstacles
 
 class Runnest:
     def __init__(self) -> None:
@@ -38,6 +39,7 @@ class Runnest:
 
         # Create the groups
         self.ground_group = pygame.sprite.Group()
+        self.obstacle_group = pygame.sprite.Group()
         self.all_sprites = pygame.sprite.Group()
 
         # == Create the ground ==
@@ -50,9 +52,20 @@ class Runnest:
         self.ground2.image.fill((0, 0, 255))
 
         # == Create the player ==
-        self.player = Player(50, 0, self.all_sprites) # 'y' is temporal
+        self.player = Player(self.all_sprites) # 'y' is temporal
+        self.player.rect.x = 50
         # Use the ground to posisionate the player
         self.player.rect.bottom = self.ground1.rect.top
+
+        # == Create the init obstacle ==
+        cactus = Obstacle(
+            self.width + 100, 0, 30, 70, # Pos and size
+            self.GAME_SPEED, # Speed
+            self.all_sprites, # Group 1
+            self.obstacle_group, # Group 2
+            )
+        # Repos in thje ground
+        cactus.rect.bottom = self.ground1.rect.top
 
     def _loop(self) -> None:
         """Main loop of the game"""
@@ -63,18 +76,26 @@ class Runnest:
                 if event.type == pygame.QUIT:
                     self.running = False
 
-                # Inputs
+                # === Inputs ===
+                # When a key is pressed
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE: # Space Key
                         self.player.jump() # Player jumping
                     if event.key == pygame.K_s or event.key == pygame.K_DOWN:
                         self.player.bend() # Player Crouching down
+                # When a key is released
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_s or event.key == pygame.K_DOWN:
                         self.player.stand_up()
 
             # Update all sprites
             self.all_sprites.update(self.ground_group)
+
+            # == Comprobe Colisions
+            hits = pygame.sprite.spritecollide(self.player, self.obstacle_group, False)
+            if hits:
+                # If there is a collision
+                self.running = False
 
             # Refresh the screen
             self.screen.fill(self.WHITE_COLOR_SCREEN)
