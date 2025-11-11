@@ -6,9 +6,9 @@
 # ========================================================================================================================
 
 # main.py
-import pygame
 
 # Libraries
+import pygame, random
 from player import Player # Player sprite
 from ground import Ground # Ground level
 from obstacle import Obstacle # Obstacles
@@ -37,6 +37,12 @@ class Runnest:
         # Flag loop
         self.running = True
 
+        # ID Event
+        self.SPAWN_OBSTACLE = pygame.USEREVENT + 1
+
+        # Temp
+        pygame.time.set_timer(self.SPAWN_OBSTACLE, 2000)
+
         # Create the groups
         self.ground_group = pygame.sprite.Group()
         self.obstacle_group = pygame.sprite.Group()
@@ -57,9 +63,11 @@ class Runnest:
         # Use the ground to posisionate the player
         self.player.rect.bottom = self.ground1.rect.top
 
-        # == Create the init obstacle ==
+    def _sapwn_obstacle(self) -> None:
+        """ Create a new obstacle and restart the temp """
+        # Create new cactus
         cactus = Obstacle(
-            self.width + 100, 0, 30, 70, # Pos and size
+            self.width + 50, 0, 30, 70, # Pos and size
             self.GAME_SPEED, # Speed
             self.all_sprites, # Group 1
             self.obstacle_group, # Group 2
@@ -67,14 +75,26 @@ class Runnest:
         # Repos in thje ground
         cactus.rect.bottom = self.ground1.rect.top
 
+        # Restart the temp
+        min_ms = 1500
+        max_ms = 3000
+        next_spawn_time = random.randint(min_ms, max_ms)
+        pygame.time.set_timer(self.SPAWN_OBSTACLE, next_spawn_time)
+
     def _loop(self) -> None:
         """Main loop of the game"""
         while(self.running):
             # Events of the game
             events = pygame.event.get()
             for event in events:
+                # Exit game
                 if event.type == pygame.QUIT:
                     self.running = False
+
+                # == Game events ==
+                # Check the temp
+                if event.type == self.SPAWN_OBSTACLE:
+                    self._sapwn_obstacle()
 
                 # === Inputs ===
                 # When a key is pressed
