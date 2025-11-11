@@ -63,7 +63,7 @@ class Runnest:
         # Use the ground to posisionate the player
         self.player.rect.bottom = self.ground1.rect.top
 
-    def _sapwn_obstacle(self) -> None:
+    def _spawn_obstacle(self) -> None:
         """ Create a new obstacle and restart the temp """
         # Create new cactus
         cactus = Obstacle(
@@ -94,7 +94,7 @@ class Runnest:
                 # == Game events ==
                 # Check the temp
                 if event.type == self.SPAWN_OBSTACLE:
-                    self._sapwn_obstacle()
+                    self._spawn_obstacle()
 
                 # === Inputs ===
                 # When a key is pressed
